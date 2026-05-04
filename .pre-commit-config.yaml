@@ -23,3 +23,12 @@ repos:
     hooks:
       - id: nbqa-ruff
         args: [--fix]
+
+  - repo: local
+    hooks:
+      - id: clean-notebook-metadata
+        name: Strip widget metadata from notebooks
+        entry: python scripts/clean_notebook.py
+        language: system
+        files: \.ipynb$
+        pass_filenames: true
