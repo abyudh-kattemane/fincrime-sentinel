@@ -137,7 +137,7 @@ def test_one_alert_per_account():
         for dest in range(10):
             rows.append(
                 {
-                    "timestamp": f"2022-09-{day+1:02d} 10:00",
+                    "timestamp": f"2022-09-{day + 1:02d} 10:00",
                     "from_bank": 70,
                     "account_from": "A",
                     "to_bank": 70,
