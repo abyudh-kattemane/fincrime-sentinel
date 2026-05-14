@@ -1,0 +1,29 @@
+version: 2
+
+sources:
+  - name: ibm_aml
+    description: "IBM AML synthetic transaction dataset (HI-Small variant)"
+    meta:
+      external_location: "/Users/abyudhka/projects/fincrime-sentinel/data/processed/transactions.parquet"
+    tables:
+      - name: transactions
+        description: "Raw transactions with bank identifiers and ground truth labels"
+        columns:
+          - name: timestamp
+            description: "Transaction date and time"
+          - name: from_bank
+            description: "Sending bank ID"
+          - name: account_from
+            description: "Sending account ID at from_bank"
+          - name: to_bank
+            description: "Receiving bank ID"
+          - name: account_to
+            description: "Receiving account ID at to_bank"
+          - name: amount_paid
+            description: "Transaction amount in original currency"
+          - name: payment_currency
+            description: "Currency of the transaction"
+          - name: payment_format
+            description: "Payment method (ACH, wire, cheque, etc.)"
+          - name: is_laundering
+            description: "Ground truth: 1 if part of a known laundering pattern"

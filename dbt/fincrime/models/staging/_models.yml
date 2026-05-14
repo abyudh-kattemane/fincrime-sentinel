@@ -1,0 +1,33 @@
+version: 2
+
+models:
+  - name: stg_ibm_aml__transactions
+    description: "Cleaned and renamed transaction records from the IBM AML dataset"
+    columns:
+      - name: src_account_id
+        description: "Source account composite identifier (bank:account)"
+        tests:
+          - not_null
+
+      - name: dst_account_id
+        description: "Destination account composite identifier"
+        tests:
+          - not_null
+
+      - name: txn_timestamp
+        description: "Transaction timestamp"
+        tests:
+          - not_null
+
+      - name: amount
+        description: "Transaction amount"
+        tests:
+          - not_null
+
+      - name: is_laundering
+        description: "Ground truth laundering label"
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [true, false]
