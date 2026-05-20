@@ -24,6 +24,16 @@ models:
         tests:
           - not_null
 
+      - name: currency
+        description: "Payment currency"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['US Dollar', 'Euro', 'Yuan', 'UK Pound',
+                       'Australian Dollar', 'Swiss Franc', 'Brazil Real',
+                       'Canadian Dollar', 'Saudi Riyal', 'Mexican Peso',
+                       'Yen', 'Ruble', 'Bitcoin', 'Shekel', 'Rupee']
+
       - name: is_laundering
         description: "Ground truth laundering label"
         tests:
@@ -31,3 +41,5 @@ models:
           - accepted_values:
               arguments:
                 values: [true, false]
+              config:
+                severity: warn

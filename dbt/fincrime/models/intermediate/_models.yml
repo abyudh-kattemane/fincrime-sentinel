@@ -1,0 +1,29 @@
+version: 2
+
+models:
+  - name: int_account_transaction_features
+    description: >
+      Per-account aggregate features computed over the full observation window.
+      Used as training features for the ML alert scoring model (Week 3)
+      and as inference inputs for the deployed scoring service.
+    columns:
+      - name: account_id
+        description: "Source account composite identifier"
+        tests:
+          - not_null
+          - unique
+
+      - name: total_txn_count
+        description: "Total number of transactions sent by this account"
+        tests:
+          - not_null
+
+      - name: unique_destinations
+        description: "Number of distinct destination accounts"
+        tests:
+          - not_null
+
+      - name: laundering_rate
+        description: "Proportion of transactions labelled as laundering (training only)"
+        tests:
+          - not_null

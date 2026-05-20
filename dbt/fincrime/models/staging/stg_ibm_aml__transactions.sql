@@ -1,9 +1,9 @@
 {{ config(materialized='view') }}
-
+-- data source being used
 with source as (
     select * from {{ source('ibm_aml', 'transactions') }}
 ),
-
+-- staging logic
 renamed as (
     select
         -- Identifiers
@@ -24,5 +24,5 @@ renamed as (
 
     from source
 )
-
+-- final selection
 select * from renamed
