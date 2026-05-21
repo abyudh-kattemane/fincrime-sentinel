@@ -35,3 +35,9 @@ jobs:
 
       - name: Run pytest
         run: uv run pytest
+
+      - name: Verify dbt project structure
+        run: |
+          cd dbt/fincrime
+          uv run dbt parse --profiles-dir .
+          uv run dbt compile --profiles-dir .

@@ -4,8 +4,8 @@ models:
   - name: fct_alerts
     description: >
       Canonical alerts table consolidating outputs from the rules engine.
-      Week 2 implementation: fan-out rule only. Will expand to all four
-      typologies in Week 3 alongside ML scoring integration.
+      Week 3 implementation: fan-out rule only. Will expand to all four
+      typologies in Week 4 alongside ML scoring integration.
     columns:
       - name: alert_id
         description: "Deterministic alert identifier"
