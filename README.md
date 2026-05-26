@@ -6,7 +6,8 @@ An AUSTRAC-aligned AML transaction monitoring system. Combines rules-based typol
 
 ## The problem
 
-Australian banks spend over A$1.5 billion annually on AML compliance. Industry false-positive rates on transaction monitoring run 90–95%, meaning investigators review ten alerts to find one real laundering case. The 2026 AUSTRAC AML/CTF reforms have raised the bar further. Most AML systems treat this as a volume problem. This project treats it as a design problem.
+Australian banks spend over A$1.5 billion annually on AML compliance. Industry benchmarks put false positive rates at 90–95%.
+An investigator opens 100 alerts and roughly 5 are worth pursuing. The 2026 AUSTRAC AML/CTF reforms have raised the bar further. Most AML systems treat this as a volume problem. This project treats it as a design problem.
 
 ## The approach
 
@@ -21,9 +22,41 @@ Plus an analytics engineering layer (dbt on DuckDB/Motherduck) underneath, and d
 
 ## Status
 
-This project is being built in public over 8 weeks. Progress is tracked in `retrospectives/`.
+This project is being built in public over 10-12 weeks. Progress is tracked in `retrospectives/`.
 
-**Week 1 (current):** Repo foundation, EDA, rules engine scaffolding.
+| Component | Status |
+|-----------|--------|
+| EDA + rules engine | Done |
+| dbt analytics layer | Done |
+| ML feature engineering | Done |
+| XGBoost scoring + SHAP | In progress |
+| LLM case assistant | Not started |
+| Deployment (FastAPI + Fly.io) | Not started |
+| Monitoring + Power BI | Not started |
+
+## Current results
+
+**Combined rules engine (4 typology detectors):**
+
+| Metric | Value |
+|--------|-------|
+| Total alerts | 81,749 |
+| Precision | 1.3% |
+| Recall | 30.5% |
+
+**Fan-out rule (rolling 10-day window):**
+
+| Metric | Value |
+|--------|-------|
+| Precision | 3.1% |
+| Recall | 6.7% |
+| Precision@50 | 32% |
+
+The 3.1% global precision matches industry benchmarks. The 32%
+precision@50 shows severity ranking is doing real work — the signal
+the ML scoring layer (Week 3) will amplify.
+
+---
 
 ## Tech stack
 
@@ -37,10 +70,9 @@ This project is being built in public over 8 weeks. Progress is tracked in `retr
 
 Synthetic but realistic. See [`data/README.md`](data/README.md).
 
-## Writing
-
-Weekly posts on Medium:
-- Week 1: *Why Australian AML false positives are a design problem, not a volume problem* (coming Sunday)
+## Architecture
+parquet → rules engine → dbt (staging → intermediate → marts)
+→ ML scoring → LLM assistant → Streamlit + FastAPI
 
 ## About
 
