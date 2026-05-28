@@ -239,3 +239,4 @@ kaggle.json
 *.npy
 *.pkl
 data/processed/ml/*.parquet
+practice/

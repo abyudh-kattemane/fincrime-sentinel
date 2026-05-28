@@ -4,16 +4,23 @@ Runs all four typology detectors and merges output into a single
 alerts DataFrame with a standardised schema.
 """
 
-from __future__ import annotations
+# Setup
+from __future__ import annotations  # to deal with circular imports in type hints
 
 import pandas as pd
 
-from src.rules.cycle import detect_cycles
+# Local imports of diffrent rules into one file
+from src.rules.cycle import detect_cycles  # import detect_cycles function from cycle.py
 from src.rules.fan_in import detect_fan_in
 from src.rules.fan_out import detect_fan_out
 from src.rules.velocity import detect_velocity_anomalies
 
-_STANDARD_COLS = ["alert_id", "rule_name", "account_id", "severity"]
+_STANDARD_COLS = [
+    "alert_id",
+    "rule_name",
+    "account_id",
+    "severity",
+]  # minimum columns for output alerts
 
 
 def run_all_rules(
@@ -49,11 +56,15 @@ def run_all_rules(
     velocity_kwargs = velocity_kwargs or {}
 
     results = [
-        detect_fan_out(transactions, **fan_out_kwargs),
+        detect_fan_out(
+            transactions, **fan_out_kwargs
+        ),  # ** unpacks the dict of kwargs into keyword arguments for the function
         detect_fan_in(transactions, **fan_in_kwargs),
         detect_cycles(transactions, **cycle_kwargs),
         detect_velocity_anomalies(transactions, **velocity_kwargs),
     ]
 
-    combined = pd.concat(results, ignore_index=True)
+    combined = pd.concat(
+        results, ignore_index=True
+    )  # combine all alerts into one DataFrame, ignore original indices
     return combined.sort_values("severity", ascending=False).reset_index(drop=True)
