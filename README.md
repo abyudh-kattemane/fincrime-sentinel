@@ -36,6 +36,12 @@ This project is being built in public over 10-12 weeks. Progress is tracked in `
 
 ## Current results
 
+## Headline result
+
+The ML alert scoring layer improves investigation queue precision from 32%
+(rules baseline) to 100% at top-50 — a 3.1x precision lift. Full comparison
+across operating points: [precision_improvement_table.md](docs/ml/tables/precision_improvement_table.md)
+
 **Combined rules engine (4 typology detectors):**
 
 | Metric | Value |
