@@ -234,3 +234,8 @@ htmlcov/
 
 # Kaggle
 kaggle.json
+
+# ML artefacts that live in Drive, not the repo
+*.npy
+*.pkl
+data/processed/ml/*.parquet
