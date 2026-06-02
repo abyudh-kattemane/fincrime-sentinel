@@ -28,14 +28,80 @@ models:
         description: "Severity score — higher is more anomalous"
         tests:
           - not_null
+      - name: alert_id
+        description: "Unique identifier for the alert (hash of rule_name + account_id)"
+      - name: metric_value
+        description: "Raw value of the underlying metric that triggered the alert (e.g. unique_destinations count for fan_out)"
+      - name: ground_truth_label
+        description: "Whether the account is involved in laundering (training only)"
+      - name: generated_at
+        description: "Timestamp when the alert was generated"
 
   - name: dim_accounts
-    description: "Account dimension — descriptive attributes per account"
+    description: >
+      Complete account registry — one row for every account that has appeared
+      in the transaction data, whether as sender, receiver, or both. Joins to
+      fct_alerts via account_id to enrich alerts with account context. Used by
+      the Power BI dashboard, the Streamlit investigator workbench, and as
+      contextual features in the ML scoring pipeline. Receiver-only accounts
+      have zero or NULL in *_sent columns; the is_sender flag distinguishes them.
     columns:
       - name: account_id
+        description: "Composite account identifier (bank:account)"
         tests:
           - not_null
           - unique
       - name: is_laundering_account
+        description: "Flag indicating if the account is involved in laundering activities"
         tests:
           - not_null
+      - name: total_txn_count_sent
+        description: >
+         Total number of transactions this account sent.
+         Zero for receiver-only accounts (where is_sender = false).
+
+      - name: total_amount_sent
+        description: >
+         Total amount this account sent, in original transaction currency.
+         Zero for receiver-only accounts.
+
+      - name: unique_destinations
+        description: >
+         Number of distinct destination accounts this account has sent to.
+         Zero for receiver-only accounts.
+
+      - name: unique_currencies
+        description: >
+         Number of distinct currencies this account has used when sending.
+         Zero for receiver-only accounts.
+
+      - name: unique_payment_methods
+        description: >
+         Number of distinct payment methods this account has used when sending.
+         Zero for receiver-only accounts.
+
+      - name: active_days
+        description: >
+         Number of days between this account's first and last sent transaction.
+         Zero for receiver-only accounts.
+
+      - name: first_txn_at
+        description: >
+         Timestamp of the first transaction this account sent.
+         NULL for receiver-only accounts.
+
+      - name: last_txn_at
+        description: >
+         Timestamp of the most recent transaction this account sent.
+         NULL for receiver-only accounts.
+
+      - name: is_sender
+        description: >
+         True if this account has ever sent a transaction.
+         When false, all *_sent columns are zero and timestamp columns are NULL.
+
+      - name: is_laundering_account
+        description: >
+         True if this account has appeared in any laundering-labelled transaction,
+         whether as the sender or the receiver. Derived from the ground truth label
+         in the source data; not available for inference.

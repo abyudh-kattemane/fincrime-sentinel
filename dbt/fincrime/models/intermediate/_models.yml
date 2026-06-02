@@ -28,82 +28,139 @@ models:
         tests:
           - not_null
 
+      - name: total_amount_sent
+        description: "Sum of all transaction amounts sent"
+
+      - name: avg_amount_sent
+        description: "Average transaction amount sent"
+
+      - name: stddev_amount_sent
+        description: "Standard deviation of transaction amounts sent"
+
+      - name: max_single_txn
+        description: "Maximum single transaction amount sent"
+
+      - name: min_single_txn
+        description: "Minimum single transaction amount sent"
+
+      - name: first_txn_at
+        description: "Timestamp of the first transaction sent"
+
+      - name: last_txn_at
+        description: "Timestamp of the most recent transaction sent"
+
+      - name: active_days
+        description: "Number of unique days with at least one transaction"
+
+      - name: unique_currencies
+        description: "Number of distinct currencies used in transactions"
+
+      - name: unique_payment_methods
+        description: "Number of distinct payment methods used"
+
+      - name: laundering_txn_count
+        description: "Number of transactions labelled as laundering (training only)"
+
   - name: int_fan_out_alerts
     description: "Accounts flagged by the fan-out rule (8+ distinct destinations)"
     columns:
       - name: account_id
+        description: "Composite account identifier (bank:account)"
         tests:
           - not_null
           - unique
       - name: rule_name
+        description: "Which rule generated this alert"
         tests:
           - not_null
           - accepted_values:
               arguments:
                 values: ['fan_out']
       - name: severity
+        description: "Severity level of the alert"
         tests:
           - not_null
       - name: ground_truth_label
+        description: "Whether the account is involved in laundering (training only)"
         tests:
           - not_null
+      - name: metric_value
+        description: "Raw value of the underlying metric that triggered the alert (e.g. unique_destinations count)"
 
   - name: int_fan_in_alerts
     description: "Accounts flagged by the fan-in rule (8+ distinct sources)"
     columns:
       - name: account_id
+        description: "Composite account identifier (bank:account)"
         tests:
           - not_null
           - unique
       - name: rule_name
+        description: "Which rule generated this alert"
         tests:
           - not_null
           - accepted_values:
               arguments:
                 values: ['fan_in']
       - name: severity
+        description: "Severity level of the alert"
         tests:
           - not_null
       - name: ground_truth_label
+        description: "Whether the account is involved in laundering (training only)"
         tests:
           - not_null
+      - name: metric_value
+        description: "Raw value of the underlying metric that triggered the alert (e.g. unique_sources count)"
 
   - name: int_cycle_alerts
     description: "Accounts flagged by the cycle rule (reciprocal money flows)"
     columns:
       - name: account_id
+        description: "Composite account identifier (bank:account)"
         tests:
           - not_null
           - unique
       - name: rule_name
+        description: "Which rule generated this alert"
         tests:
           - not_null
           - accepted_values:
               arguments:
                 values: ['cycle']
       - name: severity
+        description: "Severity level of the alert"
         tests:
           - not_null
       - name: ground_truth_label
+        description: "Whether the account is involved in laundering (training only)"
         tests:
           - not_null
+      - name: metric_value
+        description: "Raw value of the underlying metric that triggered the alert (e.g. reciprocal_count)"
 
   - name: int_velocity_alerts
-    description: "Accounts flagged by the velocity rule (50+ daily transactions)"
+    description: "Accounts flagged by the velocity rule (20+ daily transactions)"
     columns:
       - name: account_id
+        description: "Composite account identifier (bank:account)"
         tests:
           - not_null
           - unique
       - name: rule_name
+        description: "Which rule generated this alert"
         tests:
           - not_null
           - accepted_values:
               arguments:
                 values: ['velocity']
       - name: severity
+        description: "Severity level of the alert"
         tests:
           - not_null
       - name: ground_truth_label
+        description: "Whether the account is involved in laundering (training only)"
         tests:
           - not_null
+      - name: metric_value
+        description: "Raw value of the underlying metric that triggered the alert (e.g. avg_daily_txn_count)"
