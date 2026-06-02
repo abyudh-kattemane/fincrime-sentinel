@@ -2,22 +2,13 @@ version: 2
 
 models:
   - name: fct_alerts
-    description: >
-      Canonical alerts table consolidating outputs from the rules engine.
-      Week 3 implementation: fan-out rule only. Will expand to all four
-      typologies in Week 4 alongside ML scoring integration.
+    description: "Consolidated alerts from all four rules (fan_out, fan_in, cycle, velocity)"
     columns:
-      - name: alert_id
-        description: "Deterministic alert identifier"
-        tests:
-          - not_null
-
       - name: alert_key
         description: "Composite unique key (rule_name + account_id)"
         tests:
           - not_null
           - unique
-
       - name: rule_name
         description: "Which rule generated this alert"
         tests:
@@ -25,22 +16,26 @@ models:
           - accepted_values:
               arguments:
                 values: ['fan_out', 'fan_in', 'cycle', 'velocity']
-
       - name: account_id
         description: "Account that triggered the alert"
         tests:
           - not_null
           - relationships:
               arguments:
-                to: ref('int_account_transaction_features')
+                to: ref('dim_accounts')
                 field: account_id
-
       - name: severity
         description: "Severity score — higher is more anomalous"
         tests:
           - not_null
 
-      - name: ground_truth_label
-        description: "Was this account actually laundering"
+  - name: dim_accounts
+    description: "Account dimension — descriptive attributes per account"
+    columns:
+      - name: account_id
+        tests:
+          - not_null
+          - unique
+      - name: is_laundering_account
         tests:
           - not_null

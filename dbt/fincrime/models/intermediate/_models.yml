@@ -4,8 +4,8 @@ models:
   - name: int_account_transaction_features
     description: >
       Per-account aggregate features computed over the full observation window.
-      Used as training features for the ML alert scoring model (Week 3)
-      and as inference inputs for the deployed scoring service.
+      Used as training features for the ML alert scoring model and as inference
+      inputs for the deployed scoring service.
     columns:
       - name: account_id
         description: "Source account composite identifier"
@@ -25,5 +25,85 @@ models:
 
       - name: laundering_rate
         description: "Proportion of transactions labelled as laundering (training only)"
+        tests:
+          - not_null
+
+  - name: int_fan_out_alerts
+    description: "Accounts flagged by the fan-out rule (8+ distinct destinations)"
+    columns:
+      - name: account_id
+        tests:
+          - not_null
+          - unique
+      - name: rule_name
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['fan_out']
+      - name: severity
+        tests:
+          - not_null
+      - name: ground_truth_label
+        tests:
+          - not_null
+
+  - name: int_fan_in_alerts
+    description: "Accounts flagged by the fan-in rule (8+ distinct sources)"
+    columns:
+      - name: account_id
+        tests:
+          - not_null
+          - unique
+      - name: rule_name
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['fan_in']
+      - name: severity
+        tests:
+          - not_null
+      - name: ground_truth_label
+        tests:
+          - not_null
+
+  - name: int_cycle_alerts
+    description: "Accounts flagged by the cycle rule (reciprocal money flows)"
+    columns:
+      - name: account_id
+        tests:
+          - not_null
+          - unique
+      - name: rule_name
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['cycle']
+      - name: severity
+        tests:
+          - not_null
+      - name: ground_truth_label
+        tests:
+          - not_null
+
+  - name: int_velocity_alerts
+    description: "Accounts flagged by the velocity rule (50+ daily transactions)"
+    columns:
+      - name: account_id
+        tests:
+          - not_null
+          - unique
+      - name: rule_name
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['velocity']
+      - name: severity
+        tests:
+          - not_null
+      - name: ground_truth_label
         tests:
           - not_null
