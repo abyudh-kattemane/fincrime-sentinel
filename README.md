@@ -13,7 +13,7 @@ An investigator opens 100 alerts and roughly 5 are worth pursuing. The 2026 AUST
 
 Four layers:
 
-1. **Rules engine** detecting four AUSTRAC typologies: structuring, smurfing, rapid pass-through, velocity anomalies
+1. **Rules engine** The rules engine detects graph-based layering typologies — fan-out, fan-in, and cyclical flow patterns plus a transaction velocity heuristic. Note that structuring and smurfing typologies are out of scope, as they require a cash-deposit and reporting-threshold dimension the synthetic dataset does not model.
 2. **ML alert scoring** to prioritise high-confidence alerts
 3. **LLM case assistant** drafting AUSTRAC-aligned SMR narratives with RAG over real AUSTRAC guidance
 4. **Monitoring** for model drift, precision drift, and LLM output quality
