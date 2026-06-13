@@ -119,7 +119,6 @@ enriched as (
         coalesce(sf.active_days_sent, 0)             as active_days_sent,
         coalesce(sf.unique_currencies_sent, 0)       as unique_currencies_sent,
         coalesce(sf.unique_payment_methods_sent, 0)  as unique_payment_methods_sent,
-        sf.laundering_rate_sent,
         coalesce(sf.laundering_txn_count_sent, 0)    as laundering_txn_count_sent,
         -- Sender Derived ratios
         case when active_days_sent > 0
@@ -150,7 +149,6 @@ enriched as (
         coalesce(rf.active_days_received, 0)         as active_days_received,
         coalesce(rf.unique_currencies_received, 0)   as unique_currencies_received,
         coalesce(rf.unique_payment_methods_received, 0) as unique_payment_methods_received,
-        rf.laundering_rate_received,
         coalesce(rf.laundering_txn_count_received, 0)   as laundering_txn_count_received,
         -- Receiver Derived ratios
         case when active_days_received > 0
