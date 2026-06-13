@@ -7,29 +7,22 @@ models:
       Used as training features for the ML alert scoring model and as inference
       inputs for the deployed scoring service.
     columns:
+        # sender side features
       - name: account_id
-        description: "Source account composite identifier"
+        description: "Source and destination account composite identifier"
         tests:
           - not_null
           - unique
 
-      - name: total_txn_count
+      - name: total_txn_sent
         description: "Total number of transactions sent by this account"
-        tests:
-          - not_null
-
-      - name: unique_destinations
-        description: "Number of distinct destination accounts"
-        tests:
-          - not_null
-
-      - name: laundering_rate
-        description: "Proportion of transactions labelled as laundering (training only)"
         tests:
           - not_null
 
       - name: total_amount_sent
         description: "Sum of all transaction amounts sent"
+        tests:
+          - not_null
 
       - name: avg_amount_sent
         description: "Average transaction amount sent"
@@ -37,29 +30,106 @@ models:
       - name: stddev_amount_sent
         description: "Standard deviation of transaction amounts sent"
 
-      - name: max_single_txn
+      - name: max_single_txn_sent
         description: "Maximum single transaction amount sent"
 
-      - name: min_single_txn
+      - name: min_single_txn_sent
         description: "Minimum single transaction amount sent"
 
-      - name: first_txn_at
+      - name: unique_destinations_sent
+        description: "Number of distinct destination accounts this account has sent to"
+        tests:
+          - not_null
+
+      - name: first_txn_sent_at
         description: "Timestamp of the first transaction sent"
 
-      - name: last_txn_at
+      - name: last_txn_sent_at
         description: "Timestamp of the most recent transaction sent"
 
-      - name: active_days
-        description: "Number of unique days with at least one transaction"
+      - name: active_days_sent
+        description: "Number of unique days on which this account sent at least one transaction"
 
-      - name: unique_currencies
-        description: "Number of distinct currencies used in transactions"
+      - name: unique_currencies_sent
+        description: "Number of distinct currencies used in transactions sent by this account"
 
-      - name: unique_payment_methods
-        description: "Number of distinct payment methods used"
+      - name: unique_payment_methods_sent
+        description: "Number of distinct payment methods used in transactions sent by this account"
 
-      - name: laundering_txn_count
+      - name: laundering_txn_count_sent
         description: "Number of transactions labelled as laundering (training only)"
+
+      - name: avg_daily_txn_sent
+        description: "Average number of transactions sent per day"
+
+      - name: destination_diversity_ratio_sent
+        description: "Ratio of unique destination accounts to total transactions sent"
+
+      - name: laundering_ratio_sent
+        description: "Proportion of transactions labelled as laundering (training only)"
+
+       # Receiver side features (analogous to sender features, computed over received transactions)
+      - name: total_txn_received
+        description: "Total number of transactions received by this account"
+        tests:
+          - not_null
+
+      - name: total_amount_received
+        description: "Sum of all transaction amounts received"
+        tests:
+          - not_null
+
+      - name: avg_amount_received
+        description: "Average transaction amount received"
+
+      - name: stddev_amount_received
+        description: "Standard deviation of transaction amounts received"
+
+      - name: max_single_txn_received
+        description: "Maximum single transaction amount received"
+
+      - name: min_single_txn_received
+        description: "Minimum single transaction amount received"
+
+      - name: unique_sources_received
+        description: "Number of distinct source accounts this account has received from"
+        tests:
+          - not_null
+
+      - name: first_txn_received_at
+        description: "Timestamp of the first transaction received"
+
+      - name: last_txn_received_at
+        description: "Timestamp of the most recent transaction received"
+
+      - name: active_days_received
+        description: "Number of unique days on which this account received at least one transaction"
+
+      - name: unique_currencies_received
+        description: "Number of distinct currencies used in transactions received by this account"
+
+      - name: unique_payment_methods_received
+        description: "Number of distinct payment methods used in transactions received by this account"
+
+      - name: laundering_txn_count_received
+        description: "Number of transactions labelled as laundering (training only)"
+
+      - name: avg_daily_txn_received
+        description: "Average number of transactions received per day"
+
+      - name: source_diversity_ratio_received
+        description: "Ratio of unique source accounts to total transactions received"
+
+      - name: laundering_ratio_received
+        description: "Proportion of transactions labelled as laundering (training only)"
+
+      - name: send_receive_ratio
+        description: "Ratio of total amount sent to total amount received"
+
+      - name: is_laundering_involved
+        description: "Whether this account is involved in any laundering-labelled transaction, either as sender or receiver (training only)"
+        tests:
+          - not_null
 
   - name: int_fan_out_alerts
     description: "Accounts flagged by the fan-out rule (8+ distinct destinations)"
@@ -85,7 +155,7 @@ models:
         tests:
           - not_null
       - name: metric_value
-        description: "Raw value of the underlying metric that triggered the alert (e.g. unique_destinations count)"
+        description: "Raw value of the underlying metric that triggered the alert (e.g. unique_destinations_sent)"
 
   - name: int_fan_in_alerts
     description: "Accounts flagged by the fan-in rule (8+ distinct sources)"
@@ -111,7 +181,7 @@ models:
         tests:
           - not_null
       - name: metric_value
-        description: "Raw value of the underlying metric that triggered the alert (e.g. unique_sources count)"
+        description: "Raw value of the underlying metric that triggered the alert (e.g. unique_sources_received)"
 
   - name: int_cycle_alerts
     description: "Accounts flagged by the cycle rule (reciprocal money flows)"
@@ -163,4 +233,4 @@ models:
         tests:
           - not_null
       - name: metric_value
-        description: "Raw value of the underlying metric that triggered the alert (e.g. avg_daily_txn_count)"
+        description: "Raw value of the underlying metric that triggered the alert (e.g. avg_daily_txn_sent)"
